@@ -5,9 +5,7 @@ What is a brinicle? Why do we care?
 # Brinicles
 What's that?
 # Mathematical Model
-<script>
-    
-</script>
+$$\eta = \frac{c}{v}$$ 
 
 # Setup
 ## Required Materials
