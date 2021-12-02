@@ -5,7 +5,9 @@ What is a brinicle? Why do we care?
 # Brinicles
 What's that?
 # Mathematical Model
-<img src="https://latex.codecogs.com/gif.latex?O_t=\text { Onset event at time bin } t " />
+<script>
+    
+</script>
 
 # Setup
 ## Required Materials
