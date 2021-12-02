@@ -5,11 +5,12 @@ What is a brinicle? Why do we care?
 # Brinicles
 What's that?
 # Mathematical Model
-
+<!--You must use &space instead of " " or it will break-->
+<!-----------LATEX IN HTML----------->
 <p align ="center">
 <img src="https://latex.codecogs.com/gif.latex?\dpi{200}&space;\bg_black&space;\fn_jvn&space;\boxed{x&space;=&space;5}" 
-/>
-</p>
+/></p>
+<!--------------------------------------->
 
 # Setup
 ## Required Materials
