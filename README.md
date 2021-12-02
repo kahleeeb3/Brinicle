@@ -5,7 +5,7 @@ What is a brinicle? Why do we care?
 # Brinicles
 What's that?
 # Mathematical Model
-<a href="https://www.codecogs.com/eqnedit.php?latex=x&space;=&space;\frac{5}{3}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?x&space;=&space;\frac{5}{3}" title="x = \frac{5}{3}" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\bg_black&space;x&space;=&space;\frac{5}{3}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\bg_black&space;x&space;=&space;\frac{5}{3}" title="x = \frac{5}{3}" /></a>
 
 # Setup
 ## Required Materials
