@@ -97,10 +97,11 @@ while telap < tEnd:
     telap=t*dt         # Increment the simulation time elapsed
     
     # This displays the step and time being plotted. 
-    #print('Step: {0} Time: {1:0.3f}s'.format(t,telap))
+    #print('Step: {0} Time: {1:0.3f}s'.format(t,telap)) # comment out to improve runtime; (print statements slow)
 #%% Plot The Data
 
-t = tEnd        # This sets the first time point for the calculation.
+t = 0#tEnd        # This sets the first time point for the calculation. 
+#set to 0 to produce all images
 
 folder = 'images' # Specifies which folder you would like to save the plots in
 if t == tEnd:
@@ -119,7 +120,7 @@ else:
 
 #%% Make Video
 
-#functions.export('images')
+functions.export('images')
 
 #%% Data Handling
 def saveData(t):

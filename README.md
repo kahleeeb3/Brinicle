@@ -39,14 +39,8 @@ where <img src="https://latex.codecogs.com/gif.latex?\dpi{100}&space;\bg_black&s
 # Results
 ## Python Simulations
 <div align="center">
-    <!--
-    <img src="3D Models/results.png" alt="drawing" width="300"/>
-    -->
-    <video width="320" height="240" controls autoplay>
-        <source src="3D Models/results.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-    </video>
-    <div> Figure 3: Python Simulation Image Output </div>
+    <img src="3D Models/results.gif" alt="drawing" width="300"/>
+    <div> Figure 3: Python Simulation Video Output </div>
 </div>
 
 # Analysis
