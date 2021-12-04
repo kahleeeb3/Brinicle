@@ -2,9 +2,10 @@
 
 # Introduction
 A brinicle (brine icicle, also known as ice stalactite) is a downward-growing hollow tube of ice enclosing a plume of descending brine that is formed beneath developing sea ice. The main goal of this research is to build a simulation of Brinicles formation and analyze the length of the brinicle as a function of time.
-<p align="center">
+<div align="center">
     <img src="3D Models/brinicle.jpg" alt="drawing" width="300"/>
-</p>
+    <div> Figure 1: Image of brinicle from BBC documentary </div>
+</div>
 
 # Growth Model
 As found by Paul K Dayton and Seelye Martin in their research on [Observations of ice stalactites in McMurdo Sound, Antarctica](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/JC076i006p01595), the length of the brinicle as a function of time exhibits a 
@@ -13,7 +14,7 @@ As found by Paul K Dayton and Seelye Martin in their research on [Observations o
 <!--You must use &space instead of " " or it will break-->
 <!-----------LATEX IN HTML----------->
 <div align ="center"> 
-    <img style="vertical-align: middle" src="https://latex.codecogs.com/gif.latex?\dpi{150}&space;\bg_black&space;\fn_jvn&space;\boxed{L(t)=\alpha\sqrt{t}}"/> <span style="font-size:20px;vertical-align: middle" >(1)</span>
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{150}&space;\bg_black&space;\fn_jvn&space;\boxed{L(t)=\alpha\sqrt{t}}"/>
 </div>
 <!--------------------------------------->
 where <img src="https://latex.codecogs.com/gif.latex?\dpi{100}&space;\bg_black&space;\fn_jvn&space;\alpha" 
@@ -25,7 +26,7 @@ where <img src="https://latex.codecogs.com/gif.latex?\dpi{100}&space;\bg_black&s
 <div align="center">
     <img src="3D Models/Lab_Setup2.jpg" alt="drawing" width="250"/>
     <img src="3D Models/3D View 1.jpg" alt="drawing" width="250"/>
-    <div> Figure 1: Image of lab setup (left) and 3D model of setup (right) </div>
+    <div> Figure 2: Image of lab setup (left) and 3D model of setup (right) </div>
 </div>
 
 ### Required Materials
@@ -37,9 +38,16 @@ where <img src="https://latex.codecogs.com/gif.latex?\dpi{100}&space;\bg_black&s
 
 # Results
 ## Python Simulations
-<p align="center">
+<div align="center">
+    <!--
     <img src="3D Models/results.png" alt="drawing" width="300"/>
-</p>
+    -->
+    <video width="320" height="240" controls autoplay>
+        <source src="3D Models/results.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+    </video>
+    <div> Figure 3: Python Simulation Image Output </div>
+</div>
 
 # Analysis
 ```python
