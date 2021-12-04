@@ -13,8 +13,7 @@ As found by Paul K Dayton and Seelye Martin in their research on [Observations o
 <!--You must use &space instead of " " or it will break-->
 <!-----------LATEX IN HTML----------->
 <div align ="center"> 
-    <img style="vertical-align: middle" src="https://latex.codecogs.com/gif.latex?\dpi{150}&space;\bg_black&space;\fn_jvn&space;\boxed{L(t)=\alpha\sqrt{t}}"/>
-    <span style="font-size:20px" >(1)</span>
+    <img style="vertical-align: middle" src="https://latex.codecogs.com/gif.latex?\dpi{150}&space;\bg_black&space;\fn_jvn&space;\boxed{L(t)=\alpha\sqrt{t}}"/> <span style="font-size:20px;vertical-align: middle" >(1)</span>
 </div>
 <!--------------------------------------->
 where <img src="https://latex.codecogs.com/gif.latex?\dpi{100}&space;\bg_black&space;\fn_jvn&space;\alpha" 
