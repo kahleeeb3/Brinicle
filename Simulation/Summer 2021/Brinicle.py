@@ -14,41 +14,38 @@ import math
 import numpy as np
 import functions
 
-#%% Analyzing run-time
-#from timeit import default_timer as timer
-#start = timer()
+from timeit import default_timer as timer
+start = timer()
+
 
 #%% Model Parameters
-
 # The time and space parameters for the model go here.
-param = {
-"res": 0.5,         # This sets the resolution for the simulation in mm/step.
-"Lx" : 50,          # This sets the x length of the simulation in mm.
-"Ly" : 81,          # This sets the y length of the simulation in mm.
-"tEnd" : 75,        # This sets the duration of the simulation in s.
-"dt" : 0.05,        # The time step for the calculation in s.
-"dtWindow" : 0.5    # This sets how often to update the plot in s.
-}
+res = 0.5   #0.5    # This sets the resolution for the simulation in mm/step.
+Lx = 50     #30     # This sets the x length of the simulation in mm.
+Ly = 81     #85     # This sets the y length of the simulation in mm.
+tEnd = 75           # This sets the duration of the simulation in s.
+dt = 0.05   #0.05   # The time step for the calculation in s.
+dtWindow = 0.5    # This sets how often to update the plot in s.
 
 # These are internal parameters for the simulation.
-nx = math.floor(param["Lx"]/param["res"])   # The x dimension for storage.
-ny = math.floor(param["Ly"]/param["res"])   # The y dimension for storage.
-#nt = math.floor(param["tEnd"]/param["dt"])  # The t dimension for storage.
-nt = int(param["tEnd"]/param["dtWindow"])  # The t dimension for storage.
+nx = math.floor(Lx/res)             # The x dimension for storage.
+ny = math.floor(Ly/res)             # The y dimension for storage.
+nt = math.floor(tEnd/dt)            # The t dimension for storage.
 
-S0 = np.zeros((nx,ny))              # Define the array for S data.
-I0 = np.zeros((nx,ny))              # Define the array for I data.
-T0 = np.zeros((nx,ny))              # Define the array for T data.
+l = np.zeros((2,nt))                     # Define the array for l data.
 
-l = np.zeros((2,nt))                # Define the array for length data.
+split = int(tEnd/dtWindow)               # Defines the time size of data arrays
+#split = nt
+u = np.zeros((nx,ny,split))              # Define the array for u data.
+T = np.zeros((nx,ny,split))              # Define the array for T data.
+w = np.zeros((nx,ny,split))              # Define the array for w data.
 
+u0 = np.zeros((nx,ny))              # Define the array for u data.
+T0 = np.zeros((nx,ny))              # Define the array for u data.
+w0 = np.zeros((nx,ny))              # Define the array for u data.
 
-S = np.zeros((nx,ny,nt))         # Store Data for S over time.
-I = np.zeros((nx,ny,nt))         # Store Data for I over time.
-T = np.zeros((nx,ny,nt))         # Store Data for T over time.
-
-
-data = {"S":S,"I":I,"T":T}      # Dictionary of variables
+data = [u,T,w]
+dataName = ['u','T','w']
 
 #%% Chemical Parameters
 
@@ -102,8 +99,8 @@ while telap < tEnd:
     #print('Step: {0} Time: {1:0.3f}s'.format(t,telap)) # comment out to improve runtime; (print statements slow)
 #%% Plot The Data
 
-t = 0#tEnd        # This sets the first time point for the calculation. 
-#set to 0 to produce all images
+t = tEnd        # This sets the first time point for the calculation. 
+#t = 0 #set to 0 to produce all images
 
 folder = 'images' # Specifies which folder you would like to save the plots in
 if t == tEnd:
@@ -118,33 +115,6 @@ else:
         telap=t*dtWindow  # Increment the simulation time elapsed
         functions.plot(folder, tEnd, Lx, Ly, res, data2, l, dt, dtWindow, telap)
 
-#print("Run Time:", timer()-start)
-
 #%% Make Video
-
 functions.export('images')
-
-#%% Data Handling
-def saveData(t):
-    # reshaping the array from 3D matrice to 2D matrice.
-    # (5, 4, 3) matirc becomes (5,12)    
-    for i, n in enumerate(data):
-        arr_reshaped = n.reshape(n.shape[0], -1)
-        variableName = dataName[i]
-        folder = f'data/{variableName}/data_{t}.csv'          # Specify where to save the array
-        np.savetxt(folder, arr_reshaped) # Saves the array to text file
-
-    
-def loadData(t):
-    for i, n in enumerate(data):
-        variableName = dataName[i]
-        folder = f'data/{variableName}/data_{t}.csv'          # Specify where to save the array
-        loaded_arr = np.loadtxt(folder)
-        data[i] = loaded_arr.reshape(loaded_arr.shape[0], loaded_arr.shape[1] // n.shape[2], n.shape[2])
-        
-def splitNum(nt):
-    n = 8
-    while nt%n != 0:
-        n+=1
-    return n
-    
+print("Run Time:", timer()-start)    
