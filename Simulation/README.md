@@ -1,31 +1,27 @@
 # Python Simulations
-The general functions of the code is to define 3 parameter (u,v,w) for the Salt, Temperature, and Ice Concentration. These are stored as 3D arrays that are defined in the code below
-## Model Parameters
+Note: * I found the [Syder IDE](https://www.spyder-ide.org/) to work well for this project as it allows the user access to a variable explorer to better analyze the values in our arrays.*
+## 1. Mathematical Model
+Our simulation works by implementing Newton's Method of iteration. We use an initial condition of our function to estimate the value of our function over a change in time such that: 
+<!-----------LATEX IN HTML----------->
+<div align ="center"> 
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{150}&space;\bg_black&space;\fn_jvn&space;\boxed{x_{n+1}=x_n-\frac{f(x_n)}{f'(x_n)}.}"/>
+</div>
+<!--------------------------------------->
+
+## 2. Model Parameters
+The 3 parameter of the function are defined as `S,I,& T` which represent the concentration of `Salt, Ice, and Temperature` respectively. The value of these parameters at a given time step are stored as second rank tensors whose size is defined by the resolution of our image, and the length and width of our system:
 ```python
-# The time and space parameters for the model go here.
-res = 0.5 # This sets the resolution for the simulation in mm/step.
-Lx = 50 # This sets the x length of the simulation in mm.
-Ly = 81 # This sets the y length of the simulation in mm.
-tEnd = 75 # This sets the duration of the simulation in s.
-dt = 0.05 # The time step for the calculation in s.
-dtWindow = 0.5 # This sets how often to update the plot in s.
-
-# These are internal parameters for the simulation.
-nx = math.floor(Lx/res) # The x dimension for array.
-ny = math.floor(Ly/res) # The y dimension for array.
-nt = math.floor(tEnd/dt) # The t dimension for array.
-
-l = np.zeros((2,nt)) # Define the array for length data.
-
-split = int(tEnd/dtWindow) # Defines the time size of data arrays
-u = np.zeros((nx,ny,split)) # Define the array for u data.
-T = np.zeros((nx,ny,split)) # Define the array for T data.
-w = np.zeros((nx,ny,split)) # Define the array for w data.
-
-u0 = np.zeros((nx,ny)) # Define the initial array for u data.
-T0 = np.zeros((nx,ny)) # Define the initial array for u data.
-w0 = np.zeros((nx,ny)) # Define the initial array for u data.
+S0 = np.zeros((nx,ny))              # Define the array for S data.
+I0 = np.zeros((nx,ny))              # Define the array for I data.
+T0 = np.zeros((nx,ny))              # Define the array for T data.
 ```
+After each calculation, these parameters are stored in their respective index of a third rand whose third dimension size is defined by our simulation time in seconds divided by how often we would like to plot.
+```python
+S = np.zeros((nx,ny,nt))         # Store Data for S over time.
+I = np.zeros((nx,ny,nt))         # Store Data for I over time.
+T = np.zeros((nx,ny,nt))         # Store Data for T over time.
+```
+Note on RAM usage: By using `S0,I0,& T0` solely for calculation at each time step, and storing only the frames we would like to plot in `S,I,& T`, we enables the simulation to run at higher resolutions due to the massive cut in RAM usage incurred by defining three individual third rank tensors which store all time step calculations in a given parameter.
 ## Chemical Parameters
 ```python
 diff = [0.002, 0.001, 0] # This sets the diffusion in mm^2/s.

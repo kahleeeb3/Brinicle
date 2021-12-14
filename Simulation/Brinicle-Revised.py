@@ -14,38 +14,41 @@ import math
 import numpy as np
 import functions
 
+#%% Analyzing run-time
 #from timeit import default_timer as timer
 #start = timer()
 
-
 #%% Model Parameters
+
 # The time and space parameters for the model go here.
-res = 0.5   #0.5    # This sets the resolution for the simulation in mm/step.
-Lx = 50     #30     # This sets the x length of the simulation in mm.
-Ly = 81     #85     # This sets the y length of the simulation in mm.
-tEnd = 75           # This sets the duration of the simulation in s.
-dt = 0.05   #0.05   # The time step for the calculation in s.
-dtWindow = 0.5    # This sets how often to update the plot in s.
+param = {
+"res": 0.5,         # This sets the resolution for the simulation in mm/step.
+"Lx" : 50,          # This sets the x length of the simulation in mm.
+"Ly" : 81,          # This sets the y length of the simulation in mm.
+"tEnd" : 75,        # This sets the duration of the simulation in s.
+"dt" : 0.05,        # The time step for the calculation in s.
+"dtWindow" : 0.5    # This sets how often to update the plot in s.
+}
 
 # These are internal parameters for the simulation.
-nx = math.floor(Lx/res)             # The x dimension for storage.
-ny = math.floor(Ly/res)             # The y dimension for storage.
-nt = math.floor(tEnd/dt)            # The t dimension for storage.
+nx = math.floor(param["Lx"]/param["res"])   # The x dimension for storage.
+ny = math.floor(param["Ly"]/param["res"])   # The y dimension for storage.
+#nt = math.floor(param["tEnd"]/param["dt"])  # The t dimension for storage.
+nt = int(param["tEnd"]/param["dtWindow"])  # The t dimension for storage.
 
-l = np.zeros((2,nt))                     # Define the array for l data.
+S0 = np.zeros((nx,ny))              # Define the array for S data.
+I0 = np.zeros((nx,ny))              # Define the array for I data.
+T0 = np.zeros((nx,ny))              # Define the array for T data.
 
-split = int(tEnd/dtWindow)               # Defines the time size of data arrays
-#split = nt
-u = np.zeros((nx,ny,split))              # Define the array for u data.
-T = np.zeros((nx,ny,split))              # Define the array for T data.
-w = np.zeros((nx,ny,split))              # Define the array for w data.
+l = np.zeros((2,nt))                # Define the array for length data.
 
-u0 = np.zeros((nx,ny))              # Define the array for u data.
-T0 = np.zeros((nx,ny))              # Define the array for u data.
-w0 = np.zeros((nx,ny))              # Define the array for u data.
 
-data = [u,T,w]
-dataName = ['u','T','w']
+S = np.zeros((nx,ny,nt))         # Store Data for S over time.
+I = np.zeros((nx,ny,nt))         # Store Data for I over time.
+T = np.zeros((nx,ny,nt))         # Store Data for T over time.
+
+
+data = {"S":S,"I":I,"T":T}      # Dictionary of variables
 
 #%% Chemical Parameters
 
