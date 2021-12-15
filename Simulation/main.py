@@ -40,16 +40,16 @@ param.update( {
 "ntl": math.floor(tEnd/dt)  # The t dimension for L.
 })
 
-S0 = np.zeros((param["nx"],param["ny"]))              # Define the array for S data.
-I0 = np.zeros((param["nx"],param["ny"]))              # Define the array for I data.
-T0 = np.zeros((param["nx"],param["ny"]))              # Define the array for T data.
+S0 = np.zeros((param["nx"],param["ny"]))    # Define the array for S data.
+I0 = np.zeros((param["nx"],param["ny"]))    # Define the array for I data.
+T0 = np.zeros((param["nx"],param["ny"]))    # Define the array for T data.
 
 L = np.zeros((2,param["ntl"]))                # Define the array for length data.
 
 
-S = np.zeros((param["nx"],param["ny"],param["nt"]))         # Store Data for S over time.
-I = np.zeros((param["nx"],param["ny"],param["nt"]))         # Store Data for I over time.
-T = np.zeros((param["nx"],param["ny"],param["nt"]))         # Store Data for T over time.
+S = np.zeros((param["nx"],param["ny"],param["nt"]))     # Store Data for S over time.
+I = np.zeros((param["nx"],param["ny"],param["nt"]))     # Store Data for I over time.
+T = np.zeros((param["nx"],param["ny"],param["nt"]))     # Store Data for T over time.
 
 # Store all Info in a dictonary
 data = {
@@ -95,25 +95,26 @@ data["T"]["vel"] = 1
 param["xvel"] = 0.0  # This set the x advection velocity in mm/s.  
 param["yvel"] = 0.7    # 1.5/18 cm/s = 0.833 mm/s from Harvard Experiment
 #%% Run the Simulation
-t = 0                  # This sets the first time point for the calculation.
-telap = 0               # Time elapsed during the simulation.
-n = 0                   # Frame number in data[x]["Tot"]
+t = 0       # Index of the length array
+telap = 0   # Time elapsed during the simulation.
+n = 0       # Frame number
 
 while telap < tEnd:
     # Get the length data
     L[0,t] = telap    # Store time
     L[1,t] = f.length(data["I"]["Curr"],param["ny"]) # Store Len
     
+    # if we are at a frame we would like to plot, store the frame
     if telap%dtWindow == 0:
         print(f'Storing Frame at {telap}s')
         S[:,:,n] = data["S"]["Curr"]
         I[:,:,n] = data["I"]["Curr"]
         T[:,:,n] = data["T"]["Curr"]
-        n+=1
+        n+=1    # increment the frame counter
         
-    f._global(data,param,dt) # Calculate the PDE
+    f._global(data,param,dt) # Calculate the next time step
     
-    t+=1                       # Increment the storage counter
+    t+=1                       # Increment the length index
     telap=t*dt                 # Increment the simulation time elapsed
 
 #%% Plot The Data
