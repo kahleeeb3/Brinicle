@@ -15,7 +15,7 @@ L = np.zeros((2,param["ntl"]))              # Define the array for length data.
 The values in these variables are stored in a single python dictionary defined as `data`. This dictionary is then passed into a series of functions which give us the value of the variables at a the next time step. This can be simply explained using `Newton's Method`:
 <!-----------LATEX IN HTML----------->
 <div align ="center"> 
-    <img src="https://latex.codecogs.com/gif.latex?\dpi{75}&space;\bg_black&space;\fn_jvn&space;\boxed{x_{n+1}=x_n-\frac{f(x_n)}{f'(x_n)}.}"/>
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{x_{n+1}=x_n-\frac{f(x_n)}{f'(x_n)}.}"/>
 </div>
 <!-------------------------------------->
 
@@ -36,7 +36,7 @@ T = np.zeros((param["nx"],param["ny"],param["nt"]))     # Store Data for T over 
 After each calculation, the `S0,I0,T0` values stored in the `data` dictionary are overwritten and used to calculate the next time step:
 <!-----------LATEX IN HTML----------->
 <div align ="center"> 
-    <img src="https://latex.codecogs.com/gif.latex?\dpi{100}&space;\bg_black&space;\fn_jvn&space;\boxed{x_n = x_{n+1}.}"/>
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{x_n=x_{n+1}.}"/>
 </div>
 <!-------------------------------------->
 
