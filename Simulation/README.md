@@ -72,9 +72,154 @@ The main function of this while loop is to calculate the values in the next time
 <hr>
 
 ## 3. Doing Some Math (PDES.py)
-
+The main function of `PDE.py` file is to take the values  of our variables in our current time step and use them to calculate the values at the next time step.
 ```python
 def pde():
+    data["I"]["Curr"] = ice() # decide if something should be ice
+    
+    # Combine Diffusion and Advection on S
+    [Fpxy,Fxx,Fyy,Fxy,Fyx] = diffusionbytemp("S")
+    [Fxvel,Fyvel] = advectionbysalt("S",Fpxy)
+    data["S"]["Curr"] = combine("S",Fxx,Fyy,Fxy,Fyx,Fxvel,Fyvel)
+    
+    # Combine Diffusion and Advection on T
+    [Fpxy,Fxx,Fyy,Fxy,Fyx] = diffusion("T")
+    [Fxvel,Fyvel] = advection("T",Fpxy)
+    data["T"]["Curr"] = combine("T",Fxx,Fyy,Fxy,Fyx,Fxvel,Fyvel)
+    
+    # Set Constant Conditions
+    spotwidth=int(param["nx"]*0.08) # This is half width in steps
+    spotleft=int(np.round(param["nx"]/2))-spotwidth   # Determine the left edge
+    spotright=int(np.round(param["nx"]/2))+spotwidth  # Determine the right edge
+    data["S"]["Curr"][spotleft:spotright,-1:] = param["brineSalinity"]
+    data["T"]["Curr"][spotleft:spotright,-1:] = param["brineTemperature"]
+```
+This section of code can be broken down into three separate chunks:
+<hr>
+
+### 1. Decide if Something Should be Ice
+
+The first step of our calculation is to determine if Ice is formed. This is done within the `ice()` function:
+
+```python
+def ice():
+    # Load in Value of Arrays
+    S = data["S"]["Curr"]
+    I = data["I"]["Curr"]
+    T = data["T"]["Curr"]
+    
+    I[:,:] = 0  # "Melt" all existing ice
+ 
+    thresh = -1*10**(-10) # Temperature threshold
+    result = np.where(T < thresh)
+    x = result[0] # Gets a list of all the x indices
+    y = result[1] # Gets a list of all the y indices
+    ratio = param["ratio"] # Salinity(psu)/Temperature(◦C) ratio
+    for i, n in enumerate(x):
+        temp = T[x[i],y[i]]
+        conc = S[x[i],y[i]]
+        if (temp*ratio) < conc:
+            I[x[i],y[i]] = 1
+    
+    return I
+```
+This function first loads in the values of `Salt, Ice, and Temperature` concentrations from the `data` dictionary defined in the `main.py` function. We then set all values of the `Ice` array to zero. This essentially "melts" all of the ice. We then find all values in the temperature array that are less than our `thresh` value. We then multiply the temperature at each of these points by the `ratio` value defined in the `param` dictionary within the `main.py` file.The current temperature multiplied by the `Salinity(psu)/Temperature(◦C)` ratio should give us the maximum concentration of salt we can have for freezing to still occur. If this ratio is less than the concentration value, we determine that ice has formed and change the index value within `I` to 1 to indicate Ice has formed. We leave index values as 0 if Ice is not formed.
+<hr>
+
+### 2. Combine Diffusion and Advection
+<hr>
+Directly after choosing if Ice should be formed, we begin performing Diffusion and Advection on both our temperature and salt concentrations. We do not do this for ice as ice does not diffuse since it is a solid and we define Ice as a boolean value meaning you are either ice or not ice and no value in between.
+
+For the Temperature `diffusion` and `advection` we will use the following lines of function calls to calculate the change each variable has in both directions. 
+
+```python
+# Combine Diffusion and Advection on T
+    [Fpxy,Fxx,Fyy,Fxy,Fyx] = diffusion("T")
+    [Fxvel,Fyvel] = advection("T",Fpxy)
+    data["T"]["Curr"] = combine("T",Fxx,Fyy,Fxy,Fyx,Fxvel,Fyvel)
+```
+**Diffusion:**
+
+Diffusion is a movement of a concentration of something (in our use case: a fluid) from a region of higher concentration to a region of lower concentration:
+<div align="center">
+    <img src="../3D Models/Diffusion.gif" alt="drawing" width="300"/>
+    <div> Figure 1: Python Simulation of Diffusion of a Square Fluid Concentration </div>
+</div>
+
+We implemented this in Python by first padding the array (generally referred to as `fp` ) with the second and second to last items such that there is no flux in the x direction (the last item has the same element on both sides).
+
+```python
+    fpy = np.column_stack((fp[:,1],fp,fp[:,-2]))
+    fpxy = np.vstack((fpy[1,:], fpy, fpy[-2,:]))
+```  
+We then implemented a `finite differences method`:
+<!-----------LATEX IN HTML----------->
+<div align ="center"> 
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{\Delta [f](x)=f(x+1)-f(x).}"/>
+</div>
+<!-------------------------------------->
+
+to define a partial differential equations for diffusion of a general variable `fp`:
+<!-----------LATEX IN HTML----------->
+<div align ="center"> 
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{fxx=dt*(df/res**2)*(fpxy[:,2:]+fpxy[:,0:-2]-2*fpxy[:,1:-1])}"/>
+</div>
+<!-------------------------------------->
+
+```python
+    # Perform finite differences. (Diffusion)
+    fxx=dt*(df/res**2)*(fpxy[:,2:]+fpxy[:,0:-2]-2*fpxy[:,1:-1])
+    fyy=dt*(df/res**2)*(fpxy[2:,:]+fpxy[0:-2,:]-2*fpxy[1:-1,:])
+    fxx=fxx[1:-1,:] # Remove extra rows
+    fyy=fyy[:,1:-1] # Remove extra rows
+   
+    # The included fudge-factor ff rounds out the square pixels
+    # during diffusion. This factor downplays diagonal diffusion.
+    ff=15 # Set ff=1 to turn the fudge-factor off.
+    
+    # Diagonal terms
+    fxy=dt*((df/(res**2+res**2))*(fpxy[2:,2:]+fpxy[0:-2,0:-2]-2*fpxy[1:-1,1:-1]))/ff
+    fyx=dt*((df/(res**2+res**2))*(fpxy[0:-2,2:]+fpxy[2:,0:-2]-2*fpxy[1:-1,1:-1]))/ff
+```
+
+**Advection:**
+<div align="center">
+    <img src="../3D Models/AdvecDiff.gif" alt="drawing" width="300"/>
+    <div> Figure 2: Python Simulation of Diffusion and Advection of a Square Fluid Concentration </div>
+</div>
+
+
+### 3. Set Constant Conditions
+<hr>
+
+We then set constant conditions for the simulation. We do this by defining a small square section at the top of our system where the brine is injected at a constant salt concentration and temperature defined within the  `brineSalinity` and `brineTemperature` values of the `param` dictionary of the `main.py` file:
+```python
+ # Set Constant Conditions
+spotwidth=int(param["nx"]*0.08) # This is half width in steps
+spotleft=int(np.round(param["nx"]/2))-spotwidth   # Determine the left edge
+spotright=int(np.round(param["nx"]/2))+spotwidth  # Determine the right edge
+data["S"]["Curr"][spotleft:spotright,-1:] = param["brineSalinity"]
+data["T"]["Curr"][spotleft:spotright,-1:] = param["brineTemperature"]
 ```
 
 ## 4. Making Pretty Pictures (plot.py)
+<hr>
+
+By combining these methods, we can then create a "flip book" video of the different time steps of our calculation. These and videos are produced within the `Plots.py` file.
+<div align="center">
+    <img src="../3D Models/Results.gif" alt="drawing" width="300"/>
+    <div> Figure 3: Final output of the Python Simulation.</div>
+</div>
+As we can see, this results in a root t growth rate of the brinicle with a coefficient value of roughly 0.14.
+<!-----------LATEX IN HTML----------->
+<div align ="center"> 
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{L(t)\approx0.139\sqrt{t}}"/>
+</div>
+<!-------------------------------------->
+
+## 5. Note on future work
+- the data dictionary can be defined less sloppily.
+
+- my implementation allows for more data about the variables to be stored but it's not needed currently.
+
+- The Global variables could present some issues. Maybe remove this implementation.
