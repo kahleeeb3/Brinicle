@@ -155,7 +155,7 @@ We implemented this in Python by first padding the array (generally referred to 
 We then implemented a `finite differences method`:
 <!-----------LATEX IN HTML----------->
 <div align ="center"> 
-    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{\Delta [f](x)=f(x+1)-f(x).}"/>
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{\Delta[f](x)=f(x+1)-f(x).}"/>
 </div>
 <!-------------------------------------->
 
@@ -207,7 +207,7 @@ data["T"]["Curr"][spotleft:spotright,-1:] = param["brineTemperature"]
 
 By combining these methods, we can then create a "flip book" video of the different time steps of our calculation. These and videos are produced within the `Plots.py` file.
 <div align="center">
-    <img src="../3D Models/Results.gif" alt="drawing" width="300"/>
+    <img src="../3D Models/results.gif" alt="drawing" width="300"/>
     <div> Figure 3: Final output of the Python Simulation.</div>
 </div>
 As we can see, this results in a root t growth rate of the brinicle with a coefficient value of roughly 0.14.
