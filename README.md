@@ -1,3 +1,9 @@
+<!-----------LATEX IN HTML----------->
+<div align ="center"> 
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{\text{For Code Documentation, Please View The Simulations Folder.}}"/>
+</div>
+<!-------------------------------------->
+
 # Physical Model of Brinicle Growth Rate
 
 # Introduction
