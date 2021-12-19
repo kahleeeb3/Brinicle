@@ -1,10 +1,9 @@
+# Physical Model of Brinicle Growth Rate
 <!-----------LATEX IN HTML----------->
 <div align ="center"> 
-    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{\text{For Code Documentation, Please View The Simulations Folder.}}"/>
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{\text{For&space;Code&space;Documentation:&space;Please&space;View&space;The&space;Simulations&space;Folder.}}"/>
 </div>
 <!-------------------------------------->
-
-# Physical Model of Brinicle Growth Rate
 
 # Introduction
 A brinicle (brine icicle, also known as ice stalactite) is a downward-growing hollow tube of ice enclosing a plume of descending brine that is formed beneath developing sea ice. The main goal of this research is to build a simulation of Brinicles formation and analyze the length of the brinicle as a function of time.
