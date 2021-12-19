@@ -159,13 +159,7 @@ We then implemented a `finite differences method`:
 </div>
 <!-------------------------------------->
 
-to define a partial differential equations for diffusion of a general variable `fp`:
-<!-----------LATEX IN HTML----------->
-<div align ="center"> 
-    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{fxx=dt*(df/res**2)*(fpxy[:,2:]+fpxy[:,0:-2]-2*fpxy[:,1:-1])}"/>
-</div>
-<!-------------------------------------->
-
+to implement diffusion on a general variable `fp`:
 ```python
     # Perform finite differences. (Diffusion)
     fxx=dt*(df/res**2)*(fpxy[:,2:]+fpxy[:,0:-2]-2*fpxy[:,1:-1])
@@ -181,13 +175,34 @@ to define a partial differential equations for diffusion of a general variable `
     fxy=dt*((df/(res**2+res**2))*(fpxy[2:,2:]+fpxy[0:-2,0:-2]-2*fpxy[1:-1,1:-1]))/ff
     fyx=dt*((df/(res**2+res**2))*(fpxy[0:-2,2:]+fpxy[2:,0:-2]-2*fpxy[1:-1,1:-1]))/ff
 ```
+This section of code works by first adding an additional row and column to every side of the matrix and then performing diffusion in the x and y direction based on the concentration at each point in the array and the diffusion constant D_c = dt*(df/res**2). We can re-write the code here in an easier to follow format as done below:
+<!-----------LATEX IN HTML----------->
+<div align ="center"> 
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{fxx=D_c(C_{x_{(2\rightarrow&space;n)}}+C_{x_{(0\rightarrow&space;n-2)}}-2C_{x_{(1\rightarrow&space;n-1)}})}"/>
+    <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{fyy=D_c(C_{y_{(2\rightarrow&space;n)}}+C_{y_{(0\rightarrow&space;n-2)}}-2C_{y_{(1\rightarrow&space;n-1)}})}"/>
+</div>
+<!-------------------------------------->
+
+where D_c is the diffusion coefficient in terms of s/mm^2. This code works by adding the concentration in the (n=2 to n) rows of the matrix to the concentration values in the (n = 0 to n=n-2) rows of the matrix. and subtracting two times the values in the (n=1 to n=n-1) rows of the matrix. Doing this gives us the new concentration for each point in the x direction. We can repeat this process for the y direction as well (fyy). However, because diffusion works in all directions we must account for the diagonals as well. To do this we will use a `Fudge Factor` value that was chosen very sophisticatedly by Professor Dr. Tompkins through the `Guess and Check` method.
 
 **Advection:**
+
+Advection is the movements of a substance (in this case a fluid) from on location to another
 <div align="center">
     <img src="../3D Models/AdvecDiff.gif" alt="drawing" width="300"/>
     <div> Figure 2: Python Simulation of Diffusion and Advection of a Square Fluid Concentration </div>
 </div>
 
+We can define advection in our simulation quite simply with the `xvel` and `yvel` constants defined in `main.py`
+```python
+fxvel=dt*(vel_f*xvel/res)*(fpxy[0:-2,:]-fpxy[1:-1,:])
+fyvel=dt*(vel_f*yvel/res)*(fpxy[:,2:]-fpxy[:,1:-1])
+fyvel=fyvel[1:-1,:] # Remove extra rows
+fxvel=fxvel[:,1:-1] # Remove extra rows
+```
+<hr>
+
+However, diffusion should not occur through ice, and should be faster in hotter temperature water.We also know that advection should be faster for higher concentrations of salt due to the density of the fluids. We can implement these things through the `advectionbysalt, and diffusionbytemp` functions in `PDES.py`. We can then combine the results in our diffusion and Advection to get the values of concentration of `Salt, Ice, and Temperature` for the next time step.
 
 ### 3. Set Constant Conditions
 <hr>
@@ -216,10 +231,3 @@ As we can see, this results in a root t growth rate of the brinicle with a coeff
     <img src="https://latex.codecogs.com/gif.latex?\dpi{125}&space;\bg_black&space;\fn_jvn&space;\boxed{L(t)\approx0.139\sqrt{t}}"/>
 </div>
 <!-------------------------------------->
-
-## 5. Note on future work
-- the data dictionary can be defined less sloppily.
-
-- my implementation allows for more data about the variables to be stored but it's not needed currently.
-
-- The Global variables could present some issues. Maybe remove this implementation.

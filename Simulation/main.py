@@ -118,8 +118,8 @@ while telap < tEnd:
     telap=t*dt                 # Increment the simulation time elapsed
 
 #%% Plot The Data
-#t = tEnd    # This sets the first time point for the Plotting. 
-t = 0       # Set to 0 to produce all images
+t = tEnd    # This sets the first time point for the Plotting. 
+#t = 0       # Set to 0 to produce all images
 
 folder = 'images' # Specifies which folder you would like to save the plots in
 if t == tEnd:
